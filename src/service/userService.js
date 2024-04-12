@@ -1,3 +1,4 @@
+// thu viện mã hóa pass
 import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import Bluebird from 'bluebird';
@@ -9,39 +10,30 @@ const hashUserPassword = (userPassword) => {
     return hashPassword;
 }
 
-const createNewUser = (email, password, username) => {
+const createNewUser = async (email, password, username) => {
     let hashPass = hashUserPassword(password);
+    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    const [rows, fields] = await Connection.execute('INSERT INTO users (email, password, username)VALUES ( ?, ?, ?)',
+        [email, hashPass, username]);
 
-    Connection.query(
-        'INSERT INTO users (email, password, username)VALUES ( ?, ?, ?)', [email, hashPass, username],
-        function (err, results, fields) {
-            if (err) {
-                console.log(err);
-            }
-        }
-    );
 }
 
 const getUserList = async () => {
-    const Connection = await mysql.createConnection({host:'localhost', user:'root', database: 'sellfood', Promise: Bluebird});
-    let users = [];
-    // Connection.query(
-    //     'Select * from users ',
-    //     function (err, results, fields) {
-    //         if (err) {
-    //             console.log(err)
-    //         }
-    //         console.log("check result: ", results)
-    //     }
-    // );
-    try{
+    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    try {
         const [rows, fields] = await Connection.execute('Select * from users ');
         return rows;
-    } catch (error){
+    } catch (error) {
         console.log(">>>Check error ", error)
     }
 }
 
+const deleteUser = async (id) => {
+    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    const [rows, fields] = await Connection.execute('DELETE FROM users WHERE id= ? ', [id]);
+
+}
+
 module.exports = {
-    createNewUser, getUserList
+    createNewUser, getUserList, deleteUser
 }
