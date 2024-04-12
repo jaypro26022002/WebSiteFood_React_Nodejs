@@ -1,4 +1,4 @@
-// thu viện mã hóa pass
+// thu viện bcypt mã hóa pass
 import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import Bluebird from 'bluebird';
@@ -34,6 +34,28 @@ const deleteUser = async (id) => {
 
 }
 
+const getUserById = async (id) => {
+    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    try {
+        const [rows, fields] = await Connection.execute('SELECT * FROM users WHERE id= ? ', [id]);
+        // console.log(">> check rows: ", rows)
+        return rows;
+    } catch (error) {
+        console.log(">> check error: ", error);
+    }
+}
+
+const updateUserInfor = async (email, username, id) => {
+    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    try {
+        const [rows, fields] = await Connection.execute('UPDATE users SET email = ?, username = ? WHERE id = ? ', [email, username, id]);
+        // console.log(">> check rows: ", rows)
+        return rows;
+    } catch (error) {
+        console.log(">> check error: ", error);
+    }
+}
+
 module.exports = {
-    createNewUser, getUserList, deleteUser
+    createNewUser, getUserList, deleteUser, getUserById, updateUserInfor
 }
