@@ -4,6 +4,7 @@ import initWebRoutes from "./routes/web";
 // thư viện dotenv sử dụng process.env.PORT
 require("dotenv").config();
 import bodyParser from "body-parser";
+import connection from "./config/connectDB";
 
 const app = express();
 //cổng mặc định khi quên khai báo file .env
@@ -14,6 +15,9 @@ configViewEngine(app);
 // config body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//test connection
+connection();
 
 //init web routes
 initWebRoutes(app);
