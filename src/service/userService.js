@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import Bluebird from 'bluebird';
 import db from '../models/index';
-import { where } from 'sequelize/lib/sequelize';
+
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -27,13 +27,41 @@ const createNewUser = async (email, password, username) => {
 }
 
 const getUserList = async () => {
-    const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
-    try {
-        const [rows, fields] = await Connection.execute('Select * from user ');
-        return rows;
-    } catch (error) {
-        console.log(">>>Check error ", error)
-    }
+
+     // test Relationship
+    let newUser = await db.User.findOne({
+        where: { id: 1 },
+        // attributes: in ra những code mong muốn trong model(table SQL)
+        attributes: ["id", "username", "email"],
+        // include: in ra kèm với model đã Associations(quan hệ với nhau)
+        include: { model: db.Group, attributes: ["name", "description"], },
+        raw: true,
+        nest: true,
+    })
+
+    // lấy những Role nào thuộc group có điều kiện id: 1
+    // db.Role.findAll(): tìm và hiển thị tất cả Role:/user/edit,/user/show 
+    let r = await db.Role.findAll({
+        attributes: ["id", "url", "description"],
+        // include db.Group trong bản Group có điều kiện là id: 1 
+        include: { model: db.Group, where: { id: 1 }, attributes: ["id", "name", "description"], },
+        raw: true,
+        nest: true
+    })
+
+    // let users
+    console.log(">> check new user: ", newUser);
+    console.log(">> check role: ", r);
+
+    let users = db.User.findAll();
+    return users;
+    // const Connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'sellfood', Promise: Bluebird });
+    // try {
+    //     const [rows, fields] = await Connection.execute('Select * from user ');
+    //     return rows;
+    // } catch (error) {
+    //     console.log(">>>Check error ", error)
+    // }
 }
 
 const deleteUser = async (userId) => {
