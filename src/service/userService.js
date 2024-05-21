@@ -28,14 +28,16 @@ const createNewUser = async (email, password, username) => {
 
 const getUserList = async () => {
 
-     // test Relationship
+    // test Relationship
     let newUser = await db.User.findOne({
         where: { id: 1 },
         // attributes: in ra những code mong muốn trong model(table SQL)
         attributes: ["id", "username", "email"],
         // include: in ra kèm với model đã Associations(quan hệ với nhau)
         include: { model: db.Group, attributes: ["name", "description"], },
+        // raw:  Kết quả trả về sẽ là một mảng các đối tượng JSON các JSON nằm trong  ' ' -> (username: 'vinh')
         raw: true,
+        // nest : nhóm các kết quả con vào các đối tượng cha dựa trên quan hệ giữa chúng. Điều này có nghĩa là dữ liệu từ bảng con Group sẽ được nhóm bên trong các đối tượng User 
         nest: true,
     })
 
@@ -50,8 +52,8 @@ const getUserList = async () => {
     })
 
     // let users
-    console.log(">> check new user: ", newUser);
-    console.log(">> check role: ", r);
+    // console.log(">> check new user: ", newUser);
+    // console.log(">> check role: ", r);
 
     let users = db.User.findAll();
     return users;
@@ -93,7 +95,7 @@ const getUserById = async (id) => {
 }
 
 const updateUserInfor = async (email, username, id) => {
-    // kiểu ORM
+    // ORM
     await db.User.update(
         { emai: email, username: username },
         {

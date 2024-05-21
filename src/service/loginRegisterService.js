@@ -1,5 +1,8 @@
 import db from "../models"
 import bcrypt from 'bcryptjs';
+// Toan' tu sequelize
+import { Op } from 'sequelize';
+import { where } from "sequelize/lib/sequelize";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -45,7 +48,7 @@ const resgisterNewUser = async (rawUserData) => {
                 EC: 1
             }
         }
-        // hashPassword
+        // hashPassword(mã hóa password)
         let hashPassword = await hashUserPassword(rawUserData.password);
 
         // create new user
@@ -58,7 +61,7 @@ const resgisterNewUser = async (rawUserData) => {
 
         return {
             EM: 'A user is created  successfully',
-            EC: 0
+            EC: '0'
         }
 
     } catch (e) {
@@ -70,6 +73,50 @@ const resgisterNewUser = async (rawUserData) => {
     }
 }
 
+// -----------------------------------
+// check password login hàm bcrypt.compareSync so sánh inputPassword có trùng hashPassword
+const checkPassword = (inputPassword, hashPassword) => {
+    return bcrypt.compareSync(inputPassword, hashPassword); // trả ra KQ true / false 
+}
+
+const handleUserLogin = async (rawData) => {
+    try {
+        let user = await db.User.findOne({
+            where: {
+                [Op.or]: [
+                    { email: rawData.valueLogin },
+                    { phone: rawData.valueLogin }
+                ]
+            }
+        })
+
+        if (user) {
+            let isCorrectPassword = checkPassword(rawData.password, user.password);
+            if (isCorrectPassword === true) {
+                return {
+                    EM: 'ok!',// error messeger
+                    EC: 0, // error code
+                    DT: '' //data
+                }
+            }
+        }
+        console.log(">> Input user with email/phone ", rawData.valueLogin, "password: ", rawData.password)
+        return {
+            EM: 'Your email/phone or password iscorrect',// error messeger
+            EC: 1, // error code
+            DT: '' //data
+        }
+
+
+    } catch (error) {
+        console.log(error)
+        return {
+            EM: 'Something wrongs in service...',
+            EC: -2
+        }
+    }
+}
+
 module.exports = {
-    resgisterNewUser
+    resgisterNewUser, handleUserLogin
 }

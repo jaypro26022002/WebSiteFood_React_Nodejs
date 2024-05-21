@@ -11,10 +11,6 @@ const handleRegister = async (req, res) => {
     try {
         // req.body 
         if (!req.body.email || !req.body.phone || !req.body.password) {
-            console.log(">>check req<<", req.body.email)
-            console.log(">>check req<<", req.body.phone)
-            console.log(">>check req<<", req.body.password)
-
             return res.status(200).json({
                 EM: 'Missing required input', //error messeger
                 EC: '1', // error code
@@ -45,6 +41,27 @@ const handleRegister = async (req, res) => {
     }
 }
 
+
+const handleLogin = async (req, res) => {
+    try {
+        let data = await loginRegisterService.handleUserLogin(req.body);
+
+        return res.status(200).json({
+            EM: data.EM,// error messeger
+            EC: data.EC, // error code
+            DT: data.DT //data
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            EM: 'error from server',// error messeger
+            EC: '-1', // error code
+            DT: '' //data
+        })
+    }
+}
+
+
 module.exports = {
-    testApi, handleRegister
+    testApi, handleRegister, handleLogin
 }
