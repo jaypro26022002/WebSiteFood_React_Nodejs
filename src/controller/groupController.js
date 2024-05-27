@@ -11,7 +11,7 @@ const readFunc = async (req, res) => {
     } catch (e) {
         console.log(e);
         return res(500).json({
-            EM: 'error from server',// error messeger
+            EM: 'error from server groupController',// error messeger
             EC: '-1', // error code
             DT: '' //data
         })

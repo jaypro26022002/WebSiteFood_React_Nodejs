@@ -34,7 +34,7 @@ const handleRegister = async (req, res) => {
         })
     } catch {
         return res.status(500).json({
-            EM: 'error from server',// error messeger
+            EM: 'error from server apiController',// error messeger
             EC: '-1', // error code
             DT: '' //data
         })
