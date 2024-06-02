@@ -49,8 +49,8 @@ const initWebRoutes = (app) => {
     //GET,POST,PU,DELETE
     router.get('/api/test-api', apiController.testApi);
     // test upload file
-    router.get("/upload", homeController.getUploadFilePage)
-    router.post('/upload-profile-pic', upload.single('profile_pic'), homeController.handleUploadFile)
+    // router.get("/upload", homeController.getUploadFilePage)
+    // router.post('/upload-profile-pic', upload.single('profile_pic'), homeController.handleUploadFile)
 
     return app.use("/", router)
 

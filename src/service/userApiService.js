@@ -11,8 +11,6 @@ const getAllUser = async () => {
             raw: true,
             nest: true,
         });
-
-        
         // let order = await db.order.findAll({
         //     attributes: ["id", "id_cart"],
         //     // include db.Group trong bản Group có điều kiện là id: 1 
@@ -51,10 +49,10 @@ const getUserwithPagination = async (page, limit) => {
         const { count, rows } = await db.User.findAndCountAll({
             offset: offset,
             limit: limit,
-            attributes: ["id", "username", "email", "phone", "sex", "address"],
+            attributes: ["id_user", "username", "email", "phone", "sex", "address"],
             include: { model: db.Group, attributes: ["name", "description", "id"] },
             // sắp xếp theo id và DESC(giảm dần)
-            order: [['id', 'DESC']]
+            order: [['id_user', 'DESC']]
         })
 
         //công thức tổng số trang 

@@ -41,7 +41,6 @@ const handleRegister = async (req, res) => {
     }
 }
 
-
 const handleLogin = async (req, res) => {
     try {
         let data = await loginRegisterService.handleUserLogin(req.body);
@@ -63,5 +62,5 @@ const handleLogin = async (req, res) => {
 
 
 module.exports = {
-    testApi, handleRegister, handleLogin
+    testApi, handleRegister, handleLogin, 
 }

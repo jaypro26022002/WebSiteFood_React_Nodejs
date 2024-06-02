@@ -61,7 +61,7 @@ const resgisterNewUser = async (rawUserData) => {
 
         return {
             EM: 'A user is created  successfully',
-            EC: '0'
+            EC: 0
         }
 
     } catch (e) {

@@ -10,12 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // define association here,with the foreign key being defined in the source model (A).
+      // (A.hasOne(B)) One-To-One, A and B,foreign key B 
+      // (A.belongsTo(B)) One-To-One, A and B,foreign key A
+      // ( A.hasMany(B)) One-To-Many, A and B,foreign key B 
+      // ( A.belongsToMany(B, { through: 'C' })) Many-To-Many, A and B, using table C(aId and bId, )  foreign key C
       User.belongsTo(models.Group);
       User.belongsToMany(models.Project, { through: 'Project_User' });
     }
   };
   User.init({
+    id_user: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
+    },
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     username: DataTypes.STRING,

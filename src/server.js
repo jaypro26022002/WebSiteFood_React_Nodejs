@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb' }));
 connection();
 
 //init web routes
-initWebRoutes(app);
+// initWebRoutes(app);
 
 //init api routes
 initApiRoutes(app);
